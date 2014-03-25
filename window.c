@@ -8,6 +8,7 @@
 #include "lib/log.c"
 #include "lib/helpers.c"
 #include "openvpn.c"
+#include "config.c"
 
 #define IPINFO_URL "http://ipinfo.io/json"
 #define UI_FILE "gui/night_watchman.ui"
@@ -94,45 +95,45 @@ void destroy_window (GtkWidget *widget, gpointer data)
  */
 static GtkWidget* create_window (void)
 {
-	GError* error = NULL;
+  GError* error = NULL;
 
-	/* Load UI from file */
-	builder = gtk_builder_new ();
-	if (!gtk_builder_add_from_file (builder, UI_FILE, &error))
-	{
-		g_critical ("Couldn't load builder file: %s", error->message);
-		g_error_free (error);
-	}
+  /* Load UI from file */
+  builder = gtk_builder_new ();
+  if (!gtk_builder_add_from_file (builder, UI_FILE, &error))
+  {
+	  g_critical ("Couldn't load builder file: %s", error->message);
+	  g_error_free (error);
+  }
 
-	/* Auto-connect signal handlers */
-	gtk_builder_connect_signals (builder, NULL);
+  /* Auto-connect signal handlers */
+  gtk_builder_connect_signals (builder, NULL);
 
-	/* Get the window object from the ui file */
-	window = GTK_WIDGET (gtk_builder_get_object (builder, TOP_WINDOW));
-	gtk_window_set_title (GTK_WINDOW (window), "Night Watchman VPN");
+  /* Get the window object from the ui file */
+  window = GTK_WIDGET (gtk_builder_get_object (builder, TOP_WINDOW));
+  gtk_window_set_title (GTK_WINDOW (window), "Night Watchman VPN");
 
   /* Exit when the window is closed */
   g_signal_connect (window, "destroy", G_CALLBACK(destroy_window), NULL);
 
   /* Assign button signals */
-	connect_button = (GtkWidget*)gtk_builder_get_object (builder, "connect");
-	disconnect_button = (GtkWidget*)gtk_builder_get_object (builder, "disconnect");
-	file_chooser_widget = (GtkWidget*)gtk_builder_get_object (builder, "config");
-	file_chooser = (GtkFileChooser*)gtk_builder_get_object (builder, "config");
-  gtk_file_chooser_set_current_folder (file_chooser,
-                                       CURRENT_DIR);
+  connect_button = (GtkWidget*)gtk_builder_get_object (builder, "connect");
+  disconnect_button = (GtkWidget*)gtk_builder_get_object (builder, "disconnect");
+  file_chooser_widget = (GtkWidget*)gtk_builder_get_object (builder, "config");
+  file_chooser = (GtkFileChooser*)gtk_builder_get_object (builder, "config");
+  gtk_file_chooser_set_filename(file_chooser,
+				config_path);
 
-	status = (GtkStatusbar*)gtk_builder_get_object (builder, "status");
+  status = (GtkStatusbar*)gtk_builder_get_object (builder, "status");
   update_status ("Status: Disconnected");
-	location = (GtkStatusbar*)gtk_builder_get_object (builder, "location");
+  location = (GtkStatusbar*)gtk_builder_get_object (builder, "location");
   update_location("Location: Checking...");
 
   /* fetch initial location */
   run_location_finder();
 
-	g_object_unref (builder);
+  g_object_unref (builder);
 
-	return window;
+  return window;
 }
 
 void message_alert(char text[])
@@ -179,6 +180,7 @@ void disconnect_clicked (GtkButton *button, gpointer user_data)
 void config_selected (GtkFileChooser *button, gpointer user_data)
 {
   config_path = gtk_file_chooser_get_filename (file_chooser);
+  write_config_file(config_path);
   printf("config selected: %s\n", config_path);
 }
 

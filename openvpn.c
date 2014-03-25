@@ -7,17 +7,17 @@ char openvpn_path[100];
 
 void which_openvpn()
 {
-	FILE *in;
-	extern FILE *popen();
+  FILE *in;
+  extern FILE *popen();
 
-	if(!(in = popen("which openvpn", "r"))){
-		exit(1);
-	}
+  if(!(in = popen("which openvpn", "r"))){
+    exit(1);
+  }
 
-	while(fgets(openvpn_path, sizeof(openvpn_path), in)!=NULL){
-		printf("%s", openvpn_path);
-	}
-	pclose(in);
+  while(fgets(openvpn_path, sizeof(openvpn_path), in)!=NULL){
+    printf("%s", openvpn_path);
+  }
+  pclose(in);
 }
 
 bool spawn_openvpn(char openvpn_config[])

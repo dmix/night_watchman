@@ -1,5 +1,5 @@
 NAME=night_watchman
-CFLAGS=-g -o $(NAME) -lcurl
+CFLAGS=-g -o $(NAME) -lcurl -lconfig
 GTKFLAGS=-export-dynamic `pkg-config --cflags --libs gtk+-3.0`
 SRCS=main.c
 CC=gcc
