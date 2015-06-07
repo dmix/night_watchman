@@ -13,13 +13,15 @@ echo "#!/bin/sh\nsudo /sbin/ip $*" > /usr/local/unpriv-ip
 # Prepare tun0 interface manually
 echo "#!/bin/sh\nopenvpn --rmtun --dev tun0\nopenvpn --mktun --dev tun0 --dev-type tun --user openvpn --group openvpn" > /etc/openvpn/openvpn-startup 
 
-# Create 'openvpn' user
+# Create 'openvpn' user and prep folders
+useradd -s /sbin/nologin openvpn
 mkdir /var/lib/openvpn
 chown openvpn:openvpn /var/lib/openvpn
 usermod -d /var/lib/openvpn -s /sbin/nologin openvpn
 
 # Create log directory with ownership given to 'openvpn' user
 mkdir /var/log/openvpn
+mkdir /var/run/openvpn
 chown openvpn:openvpn /var/run/openvpn /var/log/openvpn /etc/openvpn -R
 chmod u+w /var/run/openvpn /var/log/openvpn -R
 
