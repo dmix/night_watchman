@@ -6,7 +6,7 @@ So to increase security we're going to run OpenVPN run without requiring root pr
 
 OpenVPN provides a [how-to guide](http://community.openvpn.net/openvpn/wiki/UnprivilegedUser) on their website. I've summarized the steps below. Alternatively, the shell commands are provided in [night_watchman/setup_openvpn.sh](https://github.com/dmix/night_watchman/blob/master/setup_openvpn.sh).
 
-### Step 1: Create script to run ip with sudo, the only binary that needs sudp
+### Step 1: Create script to run ip with sudo, the only binary that needs sudo
 
     touch /usr/local/unpriv-ip
     chmod 755 /usr/local/unpriv-ip
@@ -48,6 +48,6 @@ Done! Openvpn is now set up to run without root privileges.
 
 To manually run openvpn without root, run:
 
-    su openvpn -s /bin/sh -c "$openvpn --daemon --config <config>"
+    sudo -u openvpn openvpn --config <config>
 
 *SELinux users*: if you're using SELinux there is one final step at the bottom of the [OpenVPN](https://community.openvpn.net/openvpn/wiki/UnprivilegedUser) guide you must follow.
