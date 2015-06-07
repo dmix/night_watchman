@@ -1,7 +1,6 @@
 #include "window.c"
 
-int
-main (int argc, char *argv[])
+int main (int argc, char *argv[])
 {
   printf("--------Night Watchman----------\n");
   read_config_file();

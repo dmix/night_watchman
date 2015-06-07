@@ -44,7 +44,7 @@ void update_location(char *text)
  */
 void *find_location()
 {
-  printf ("fetching location\n");
+  printf ("Fetching location\n");
 
   jsmntok_t *t;
   char *js;
@@ -57,7 +57,6 @@ void *find_location()
 
   js = json_fetch(IPINFO_URL);
 
-  //printf(js);
   jsmntok_t *tokens = json_tokenise(js);
   t = &tokens[2];
   ip= json_token_tostr(js, t);
@@ -87,7 +86,7 @@ void run_location_finder()
 void destroy_window (GtkWidget *widget, gpointer data)
 {
   printf("Exiting");
-	gtk_main_quit ();
+  gtk_main_quit ();
 }
 
 /**

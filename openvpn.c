@@ -1,43 +1,43 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include <unistd.h>
 
-char openvpn_path[100];
 
-void which_openvpn()
+void find_openvpn(char *path)
 {
-  FILE *in;
-  extern FILE *popen();
-
-  if(!(in = popen("which openvpn", "r"))){
-    exit(1);
+  char *openvpn_paths[4] = {
+    "/usr/bin/openvpn",
+    "/usr/sbin/openvpn",
+    "/usr/local/bin/openvpn",
+    "/usr/local/sbin/openvpn"
+  };
+  for(int i = 0; i < sizeof(openvpn_paths) / sizeof(openvpn_paths); i++)
+  {
+    if( access(openvpn_paths[i], F_OK) != -1) {
+      strcpy(path, openvpn_paths[i]);
+      break;
+    }
   }
-
-  while(fgets(openvpn_path, sizeof(openvpn_path), in)!=NULL){
-    printf("%s", openvpn_path);
-  }
-  pclose(in);
 }
 
 bool spawn_openvpn(char openvpn_config[])
 {
+  char openvpn_path[50];
+  find_openvpn(openvpn_path);
+  printf("Found OpenVPN path: %s\n", openvpn_path);
+
   if(openvpn_config == NULL) {
-    printf("please select a config path\n");
+    printf("Please select a config path\n");
     return false;
-  }
-  else {
-    which_openvpn();
-    printf("spawning openvpn: %s\n", openvpn_path);
-    char *argv[6] = {
-      NULL,
-      "--config",
-      NULL
+  } else {
+    char *argv[3] = {
+      openvpn_path,
+      openvpn_config
     };
-    argv[0] = openvpn_path;
-    argv[2] = openvpn_config;
-    printf("argument: %s\n", argv[1]);
-    execv("/usr/local/sbin/openvpn", argv);
+    printf("Spawning openvpn: %s %s %s\n", argv[0], argv[1], argv[2]);
+    execv(openvpn_path, argv);
     return true;
   }
 }
