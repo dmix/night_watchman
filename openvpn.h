@@ -4,5 +4,5 @@
 #include <unistd.h>
 
 void which_openvpn()
-bool spawn_openvpn(char openvpn_config[])
+void find_openvpn(char *path)
 void *terminate_openvpn()

@@ -18,7 +18,7 @@ A security-focused OpenVPN client for Linux. Planned features:
 
 **Step 1)**: Set-up OpenVPN to run as an unprivileged user
 
-To improve security, we're going to run both openvpn and night_watcman without root privileges. OpenVPN typically requires root, so openvpn needs a be set up to run as an unprivileged user.
+To improve security, we're going to run both openvpn and night_watchman without root privileges. OpenVPN typically requires root, so openvpn needs a be set up to run as an unprivileged user.
 
 I've created a simple instruction guide on [how to run OpenVPN without root](https://github.com/dmix/night_watchman/blob/master/OPENVPN.md).
 
